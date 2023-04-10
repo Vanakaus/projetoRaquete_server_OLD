@@ -1,0 +1,11 @@
+{
+  "name": "projetoraquete_server",
+  "version": "1.0.0",
+  "description": "Servidor para o Projeto Raquete.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vinicius Simões Vieira",
+  "license": "ISC"
+}
