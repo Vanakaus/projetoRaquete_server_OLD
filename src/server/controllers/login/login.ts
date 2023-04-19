@@ -3,6 +3,7 @@ import * as yup from 'yup';
 
 import { validacaoYup } from '../../shared/middlewares';
 import { StatusCodes } from 'http-status-codes';
+import { pool } from '../../database';
 
 
 export interface ILogin {
@@ -21,19 +22,28 @@ export const validacao = validacaoYup((getSchema) => ({
 export async function login(req: Request<{}, {}, ILogin>, res: Response) {
 
     console.log('\nUsuário tentando logar');
-    console.log(`Email: ${req.body}`);
+    console.log(`Email: ${req.body.email}`);
 
     
-    //Ajustar depois
-
-    if (req.body.email === 'vini@gmail.com' && req.body.senha === 'vini123') {
-        res.status(StatusCodes.OK);
-        res.json({ Resposta: 'Login realizado com sucesso', JWT: 'token123' });
-        console.log('\nUsuário logado com sucesso');
-    } else {
-        res.status(StatusCodes.UNAUTHORIZED);
-        res.json({ Resposta: 'Login ou senha incorretos', JWT: '' });
-        console.log('\nUsuário não logado');
-    }
+    pool.query(`SELECT email, nome, tipousuario
+        FROM public.login
+        JOIN public.usuarios
+        ON email = login
+        WHERE login.email = '${req.body.email}' AND login.senha = '${req.body.senha}'`, (error: any, results: { rows: any; }) => {
+        if (error) {
+            console.log(error);
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ Resposta: 'Erro no servidor', JWT: '' });
+        }
+        if (results.rows.length === 0) {
+            console.log('Email ou senha incorretos');
+            res.status(StatusCodes.OK).json({ Resposta: 'Email ou senha incorretos', JWT: '' });
+        }
+        
+        if (results.rows.length === 1) {
+            console.log('Login realizado com sucesso');
+            res.status(StatusCodes.OK).json({ Resposta: 'Login realizado com sucesso', JWT: 'token123' });
+        }
+    }  
+    );
 
 }
