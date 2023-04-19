@@ -1,5 +1,9 @@
 import server from './server/server';
 
-server.listen(process.env.PORT, () => {
-    console.log('Servidor rodando na porta ' + process.env.PORT);
+server.listen(process.env.SERVER_PORT, () => {
+
+    console.log('\n');
+    console.log('= = = = = = = = = = = = = = = = = = = =');
+    console.log('Servidor rodando na porta ' + process.env.SERVER_PORT);
+    console.log('= = = = = = = = = = = = = = = = = = = =');
 });
