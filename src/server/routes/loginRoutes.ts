@@ -7,9 +7,11 @@ export const router = Router();
 
 
 
-router.post('/login', informativo, LoginController.validacao, LoginController.login);
+router.post('/login', informativo, LoginController.validacaoLogin, LoginController.login);
+router.post('/cadastro', informativo, LoginController.validacaoCadastro, LoginController.cadastro);
+router.post('/atualizarDados', informativo, LoginController.validacaoAtualiza, LoginController.atualiza);
+router.post('/atualizarSenha', informativo, LoginController.validacaoAtualizaSenha, LoginController.atualizaSenha);
 
 
-// router.get('/cadastro', LoginController);
 // router.get('/recuperarSenha', LoginController);
 
