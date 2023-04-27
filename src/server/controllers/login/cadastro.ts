@@ -22,7 +22,7 @@ export const validacaoCadastro = validacaoYup((getSchema) => ({
     body: getSchema<ICadastro>(yup.object().shape({
         email: yup.string().email().required(),
         senha: yup.string().required().min(6),
-        cpf: yup.number().required().min(11),
+        cpf: yup.number().required().test('len', 'CPF deve ter 11 dígitos', (val) => val?.toString().length === 11),
         nome: yup.string().required(),
         sobrenome: yup.string().required(),
         nascimento: yup.string().required(),
