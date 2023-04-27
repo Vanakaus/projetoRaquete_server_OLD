@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import { validacaoYup } from '../../shared/middlewares';
 import { StatusCodes } from 'http-status-codes';
 import { pool } from '../../database';
+import { hashSenha } from '../../shared/services';
 
 
 export interface ICadastro {
@@ -41,7 +42,7 @@ export async function cadastro(req: Request<{}, {}, ICadastro>, res: Response) {
     
     pool.query(`SELECT email, cpf
         FROM public.usuarios
-        WHERE usuarios.email = '${req.body.email}' OR usuarios.cpf = '${req.body.cpf}'`, (error: any, results: { rows: any; }) => {
+        WHERE usuarios.email = '${req.body.email}' OR usuarios.cpf = '${req.body.cpf}'`, async (error: any, results: { rows: any; }) => {
         if (error) {
             console.log(error);
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ Resposta: 'Erro no servidor'});
@@ -56,11 +57,13 @@ export async function cadastro(req: Request<{}, {}, ICadastro>, res: Response) {
             console.log('\nEmail e CPF Disponíveis');
 
 
+            const senhaEncriptada = await hashSenha(req.body.senha);
+
             pool.query(`INSERT INTO public.usuarios(
                 email, senha, cpf, nome, sobrenome,
                 nascimento, celular, telefone)
                 VALUES (
-                    '${req.body.email}', '${req.body.senha}',
+                    '${req.body.email}', '${senhaEncriptada}',
                     '${req.body.cpf}', '${req.body.nome}', '${req.body.sobrenome}',
                     '${req.body.nascimento}', '${req.body.celular}', '${req.body.telefone}');`, (error: any, results: { rows: any; }) => {
                 
