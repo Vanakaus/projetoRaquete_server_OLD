@@ -25,9 +25,6 @@ export async function login(req: Request<{}, {}, ILogin>, res: Response) {
     console.log('\nUsuário tentando logar');
     console.log(`Email: ${req.body.email}`);
 
-    const senhaEncriptada = await hashSenha(req.body.senha);
-    console.log(`Senha: ${senhaEncriptada}`);
-
     
     pool.query(`SELECT email, nome, tipo_usuario, senha
         FROM public.usuarios
